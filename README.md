@@ -32,6 +32,3 @@ Classifier webapp dibangun dengan menggunakan Streamlit (Python-framework). Tuju
 - For UI [Streamlit](https://streamlit.io/)
 
 ## Koreksi
-
-- Error (index)
-  tidak bisa menggunakan pandas
