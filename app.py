@@ -75,14 +75,14 @@ if st.checkbox('Train-Test Dataset'):
     st.write(y_test.shape)
 
 def user_report():
-    age = st.sidebar.slider('Age', 29, 77, 40)
+    age = st.sidebar.slider('Age', 0, 77, 40)
     sex = st.sidebar.slider('Sex (0 for female, 1 for male)', 0, 1, 1)
     cp = st.sidebar.slider('Chest Pain Type', 0, 3, 1)
-    trstbps = st.sidebar.slider('Resting Blood Pressure', 94, 200, 120)
-    chol = st.sidebar.slider('Serum Cholesterol (mg/dl)', 126, 564, 240)
+    trstbps = st.sidebar.slider('Resting Blood Pressure', 0, 200, 120)
+    chol = st.sidebar.slider('Serum Cholesterol (mg/dl)', 0, 564, 240)
     fbs = st.sidebar.slider('Fasting Blood Sugar (> 120 mg/dl)', 0, 1, 0)
     restecg = st.sidebar.slider('Resting Electrocardiographic Results', 0, 2, 1)
-    thalachh = st.sidebar.slider('Maximum Heart Rate Achieved', 71, 202, 150)
+    thalachh = st.sidebar.slider('Maximum Heart Rate Achieved', 0, 202, 150)
     thall = st.sidebar.slider ('Thallium Test Result', 0, 3, 1)
     caa = st.sidebar.slider('Number of Major Vessels Colored by Fluoroscopy', 0, 3, 0)
     oldpeak = st.sidebar.slider('ST Depression Induced by Exercise', 0.0, 6.2, 0.0)
