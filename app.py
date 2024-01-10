@@ -1,20 +1,23 @@
 import streamlit as st
-import pandas as pd
-from PIL import Image
-import numpy as np
-import matplotlib.pyplot as plt
+import pandas as pd 
+from PIL import Image 
+import numpy as np 
+import matplotlib.pyplot as plt 
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
-# from pandas_profiling import ProfileReport
-# from streamlit_pandas_profiling import st_profile_report
-import seaborn as sns
-import pickle
+from pandas_profiling import ProfileReport
+from streamlit_pandas_profiling import st_profile_report
+import seaborn as sns 
+import pickle 
 
-# import model
-svm = pickle.load(open('SVC.pkl', 'rb'))
 
-# load heart dataset
-data = pd.read_csv('Heart Dataset.csv')
+#import model 
+svm = pickle.load(open('SVC.pkl','rb'))
+
+#pip install phik#load dataset
+data = pd.read_csv('HeartDataset.csv')
+#data = data.drop(data.columns[0],axis=1)
+
 
 st.title('Aplikasi Heart')
 
@@ -26,17 +29,17 @@ html_layout1 = """
 <br>
 <br>
 """
-st.markdown(html_layout1, unsafe_allow_html=True)
-activities = ['SVM', 'Model Lain']
-option = st.sidebar.selectbox('Pilihan mu ?', activities)
+st.markdown(html_layout1,unsafe_allow_html=True)
+activities = ['SVM','Model Lain']
+option = st.sidebar.selectbox('Pilihan mu ?',activities)
 st.sidebar.header('Data Pasien')
 
 if st.checkbox("Tentang Dataset"):
-    html_layout2 = """
+    html_layout2 ="""
     <br>
-    <p>Ini adalah dataset Heart Disease</p>
+    <p>Ini adalah dataset PIMA Indian</p>
     """
-    st.markdown(html_layout2, unsafe_allow_html=True)
+    st.markdown(html_layout2,unsafe_allow_html=True)
     st.subheader('Dataset')
     st.write(data.head(10))
     st.subheader('Describe dataset')
@@ -45,16 +48,19 @@ if st.checkbox("Tentang Dataset"):
 sns.set_style('darkgrid')
 
 if st.checkbox('EDa'):
-    # Use pandas_profiling or other EDA methods here
-    st.subheader('Input Dataframe')
+    pr =ProfileReport(data,explorative=True)
+    st.header('**Input Dataframe**')
     st.write(data)
+    st.write('---')
+    st.header('**Profiling Report**')
+    st_profile_report(pr)
 
-# train test split
-X = data.drop('age', axis=1)  # Assuming 'target' is the column indicating the output
-y = data['age']
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=42)
+#train test split
+X = data.drop('output',axis=1)
+y = data['output']
+X_train, X_test,y_train,y_test = train_test_split(X,y,test_size=0.20,random_state=42)
 
-# Training Data
+#Training Data
 if st.checkbox('Train-Test Dataset'):
     st.subheader('X_train')
     st.write(X_train.head())
@@ -69,45 +75,57 @@ if st.checkbox('Train-Test Dataset'):
     st.write(y_test.shape)
 
 def user_report():
-    # Modify these sliders based on the features in your Heart dataset
     age = st.sidebar.slider('Age', 29, 77, 40)
     sex = st.sidebar.slider('Sex (0 for female, 1 for male)', 0, 1, 1)
     cp = st.sidebar.slider('Chest Pain Type', 0, 3, 1)
-    trestbps = st.sidebar.slider('Resting Blood Pressure', 94, 200, 120)
+    trstbps = st.sidebar.slider('Resting Blood Pressure', 94, 200, 120)
     chol = st.sidebar.slider('Serum Cholesterol (mg/dl)', 126, 564, 240)
     fbs = st.sidebar.slider('Fasting Blood Sugar (> 120 mg/dl)', 0, 1, 0)
     restecg = st.sidebar.slider('Resting Electrocardiographic Results', 0, 2, 1)
-    thalach = st.sidebar.slider('Maximum Heart Rate Achieved', 71, 202, 150)
+    thalachh = st.sidebar.slider('Maximum Heart Rate Achieved', 71, 202, 150)
+    thall = st.sidebar.slider ('Thallium Test Result', 0, 3, 1)
+    caa = st.sidebar.slider('Number of Major Vessels Colored by Fluoroscopy', 0, 3, 0)
+    oldpeak = st.sidebar.slider('ST Depression Induced by Exercise', 0.0, 6.2, 0.0)
+    exng = st.sidebar.slider('Exercise Induced Angina (0 for No, 1 for Yes)', 0, 1, 0)
+    slp = st.sidebar.slider('Slope of the Peak Exercise ST Segment', 0, 2, 1)
     
     user_report_data = {
         'Age': age,
         'Sex': sex,
         'ChestPainType': cp,
-        'RestingBloodPressure': trestbps,
+        'RestingBloodPressure': trstbps,
         'SerumCholesterol': chol,
         'FastingBloodSugar': fbs,
         'RestingECG': restecg,
-        'MaxHeartRate': thalach
+        'MaxHeartRate': thalachh,
+        'ThalliumTestResult': thall,
+        'NumberOfMajorVessels': caa,
+        'STDepression': oldpeak,
+        'ExerciseInducedAngina': exng,
+        'SlopeOfPeakExerciseSTSegment': slp
     }
-    report_data = pd.DataFrame(user_report_data, index=[0])
+    report_data = pd.DataFrame(user_report_data,index=[0])
     return report_data
 
-# Data Pasien
+#Data Pasion
 user_data = user_report()
 st.subheader('Data Pasien')
 st.write(user_data)
 
 user_result = svm.predict(user_data)
-svc_score = accuracy_score(y_test, svm.predict(X_test))
+svc_score = accuracy_score(y_test,svm.predict(X_test))
 
-# Output
+#output
 st.subheader('Hasilnya adalah : ')
-output = ''
-if user_result[0] == 0:
-    output = 'Kamu Aman'
+output=''
+if user_result[0]==0:
+    output='Kamu Aman'
 else:
-    output = 'Kamu terkena penyakit jantung'
+    output ='Kamu terkena penyakit jantung'
 st.title(output)
-st.subheader('Model yang digunakan : \n' + option)
+st.subheader('Model yang digunakan : \n'+option)
 st.subheader('Accuracy : ')
-st.write(str(svc_score * 100) + '%')
+st.write(str(svc_score*100)+'%')
+
+
+
