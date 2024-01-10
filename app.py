@@ -30,7 +30,7 @@ html_layout1 = """
 <br>
 """
 st.markdown(html_layout1,unsafe_allow_html=True)
-activities = ['SVM','Model Lain']
+activities = ['KNN','Model Lain']
 option = st.sidebar.selectbox('Pilihan mu ?',activities)
 st.sidebar.header('Data Pasien')
 
